@@ -6,9 +6,10 @@ type User struct {
 	Password string `eorm:"password"`
 	Mobile   string `eorm:"mobile"`
 	Email    string `eorm:"email"`
-	Role     string `eorm:"role"`
 	Question string `eorm:"question"`
 	Answer   string `eorm:"answer"`
+	Role     string `eorm:"role"`
+	Unit     string `eorm:"unit"`
 }
 
 type UserResp struct {

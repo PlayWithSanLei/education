@@ -10,6 +10,7 @@ import (
 
 	"github.com/impact-eintr/WebKits/erbac"
 	"github.com/impact-eintr/education/global"
+	"go.uber.org/zap"
 )
 
 var RootDir string
@@ -18,8 +19,13 @@ var once = new(sync.Once)
 var R = struct{}{}
 
 func init() {
-
 	var err error
+	err = global.Conf.ReadSection("rbac", &global.RBACSetting)
+	if err != nil {
+		zap.L().Error("init RBAC failed, err:", zap.Error(err))
+		panic(err)
+	}
+
 	once.Do(func() {
 		inferRootDir()
 		global.RBACSetting.CustomerInherFile = path.Join(RootDir, global.RBACSetting.CustomerInherFile)

@@ -22,7 +22,7 @@ func ResponseError(c *gin.Context, code code) {
 func ResponseErrorWithMsg(c *gin.Context, code code, msg interface{}) {
 	rd := &Resp{
 		Code: code,
-		Msg:  code.Msg(),
+		Msg:  msg,
 	}
 	c.JSON(http.StatusOK, rd)
 }

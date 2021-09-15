@@ -19,18 +19,19 @@ type MyClaims struct {
 	UserID   int64  `json:"user_id"`
 	UserName string `json:"username"`
 	UserRole string `json:"userrole"`
-	//UserUnit string `json:"unit"`
+	UserUnit string `json:"unit"`
 	jwt.StandardClaims
 }
 
-func GenToken(userID int64, userName, userRole string) (string, error) {
+func GenToken(userID int64, userName, userRole, userUnit string) (string, error) {
 	c := MyClaims{
 		UserID:   userID,
 		UserName: userName,
 		UserRole: userRole,
+		UserUnit: userUnit,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(), // 过期时间
-			Issuer:    "webconsole",                               // 签发人
+			Issuer:    "impact-eintr",                             // 签发人
 			IssuedAt:  time.Now().Unix(),                          // 签发时间
 		},
 	}

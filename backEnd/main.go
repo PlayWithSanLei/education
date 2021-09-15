@@ -9,14 +9,37 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/impact-eintr/education/global"
+	"github.com/impact-eintr/education/internal/dao/db"
 	"github.com/impact-eintr/education/internal/router"
+	"github.com/impact-eintr/education/pkg/logger"
+	"github.com/impact-eintr/education/pkg/rbac"
+	sf "github.com/impact-eintr/education/pkg/snowflake"
+	"github.com/impact-eintr/education/pkg/trans"
 	"go.uber.org/zap"
 )
 
+// 加载配置文件
 func init() {
-	// 加载配置文件
-	global.Init()
+	// 初始化日志
+	_ = logger.L
+	zap.L().Debug("logger init success...")
+
+	// 初始化ID生成器
+	_ = sf.S
+	zap.L().Debug("ID init success...")
+
+	// 初始化翻译器设置
+	_ = trans.T
+	zap.L().Debug("Trans init success...")
+
+	// 初始化sql设置
+	_ = db.DB
+	zap.L().Debug("DB init success...")
+
+	// 初始化RBAC
+	_ = rbac.R
+	zap.L().Debug("RBAC init success...")
+
 }
 
 // @title EDU后台管理系统

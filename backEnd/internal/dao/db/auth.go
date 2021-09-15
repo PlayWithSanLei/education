@@ -7,6 +7,8 @@ import (
 	"encoding/hex"
 	"log"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/impact-eintr/education/global"
 	"github.com/impact-eintr/education/internal/inErr"
 	"github.com/impact-eintr/education/internal/model"
@@ -18,7 +20,7 @@ const salt string = `impact-eintr`
 
 // 检查注册时用户是否已经存在
 func CheckUserExist(mobile string) error {
-	sqlStr := `select count(user_id) from user where username = ?`
+	sqlStr := `select count(userid) from user where username = ?`
 	var count int
 
 	err := global.DB.QueryRow(sqlStr, mobile).Scan(&count)
@@ -70,8 +72,8 @@ func UserLogin(user *model.User) (err error) {
 
 	statement := eorm.NewStatement()
 	statement = statement.SetTableName("user").
-		AndEqual("username", user.Username).
-		Select("user_id, username, password, role, unit")
+		AndEqual("mobile", user.Mobile).
+		Select("*")
 
 	c := <-global.DBClients
 	defer func() {
@@ -87,10 +89,10 @@ func UserLogin(user *model.User) (err error) {
 		// 查询失败
 		return err
 	}
-
 	// 判断密码是否匹配
 	password := encryptPassword(oPassword)
 	if password != user.Password {
+		log.Println(password, user.Password)
 		return inErr.ErrInvalidPassword
 	}
 

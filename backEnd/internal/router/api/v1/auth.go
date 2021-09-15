@@ -2,7 +2,7 @@ package v1
 
 import (
 	"errors"
-	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -25,6 +25,7 @@ func SignUpHandler(c *gin.Context) {
 		if !ok {
 			resp.ResponseError(c, resp.CodeInvalidParam)
 		}
+		log.Println(errs)
 		resp.ResponseErrorWithMsg(c, resp.CodeInvalidParam, errs.Translate(global.Trans))
 		return
 	}
@@ -48,9 +49,6 @@ func LoginHandler(c *gin.Context) {
 	p := new(model.ParamLogin)
 
 	if err := c.ShouldBindJSON(&p); err != nil {
-
-	}
-	if err := c.ShouldBindJSON(&p); err != nil {
 		zap.L().Error("Login with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
@@ -62,7 +60,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 2. 业务处理
-	userID, userRole, userUnit, aToken, err := service.Login(p)
+	userID, userName, userRole, aToken, err := service.Login(p)
 	if err != nil {
 		zap.L().Error("登录失败", zap.Error(err))
 		if errors.Is(err, inErr.ErrUserNotExist) {
@@ -78,9 +76,9 @@ func LoginHandler(c *gin.Context) {
 	data := map[string]string{
 		"token": aToken,
 		"role":  userRole,
-		"id":    fmt.Sprintf("%d", userID),
-		"name":  p.UserName,
-		"unit":  userUnit}
+		"id":    userID,
+		"name":  userName,
+	}
 
 	// 3. 返回响应
 	resp.ResponseSuccess(c, data)

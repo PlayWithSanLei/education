@@ -23,5 +23,14 @@ func NewRouter() (r *gin.Engine, err error) {
 	// apiv1路由组
 	apiv1 := r.Group("/api/v1")
 	apiv1.POST("/signup", v1.SignUpHandler)
+	apiv1.POST("/login", v1.LoginHandler)
+
+	// 用户管理路由
+	homeGroup := apiv1.Group("/home")
+	{
+		homeGroup.Use()
+	}
+
+	return r, nil
 
 }

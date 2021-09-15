@@ -1,8 +1,13 @@
 package service
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/impact-eintr/education/internal/dao/db"
 	"github.com/impact-eintr/education/internal/model"
+	"github.com/impact-eintr/education/pkg/jwt"
+	sf "github.com/impact-eintr/education/pkg/snowflake"
 )
 
 func SignUp(p *model.ParamSignUp) error {
@@ -24,6 +29,7 @@ func SignUp(p *model.ParamSignUp) error {
 		Question: p.Question,
 		Answer:   p.Answer,
 		Role:     "user",
+		Unit:     "暂无",
 	}
 
 	// 存入数据库
@@ -31,7 +37,22 @@ func SignUp(p *model.ParamSignUp) error {
 
 }
 
-// 处理用户登录以及JWT的发放
-func Login(p *model.ParamLogin) (int64, string, string, string, error) {
+// 处理用户登录以及JWT的发放 id name role token
+func Login(p *model.ParamLogin) (string, string, string, string, error) {
+	// 构造一个User实例
+	user := &model.User{
+		Mobile:   p.Mobile,
+		Password: p.Password,
+	}
+
+	// 数据库验证
+	if err := db.UserLogin(user); err != nil {
+		log.Println(user)
+		return "", "", "", "", nil
+	}
+
+	// 验证通过后发放token
+	aToken, err := jwt.GenToken(user.UserID, user.Username, user.Role)
+	return fmt.Sprintf("%d", user.UserID), user.Username, user.Role, aToken, err
 
 }

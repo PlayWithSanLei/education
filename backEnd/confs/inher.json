@@ -1,0 +1,5 @@
+{
+    "root":["manager"],
+    "manager":["user"],
+    "user":null
+}

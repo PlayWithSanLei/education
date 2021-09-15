@@ -13,7 +13,7 @@ var S = struct{}{}
 
 func init() {
 	var st time.Time
-	st, err := time.Parse("2006-01-02", global.ServerSetting.StatTime)
+	st, err := time.Parse("2006-01-02", global.ServerSetting.StartTime)
 	if err != nil {
 		panic(err)
 	}

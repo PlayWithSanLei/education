@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -20,6 +21,11 @@ var L = struct{}{}
 
 // 初始化Logger
 func init() {
+	// 初始化日志
+	if err := global.Conf.ReadSection("log", &global.LoggerSetting); err != nil {
+		fmt.Println("init logger failed, err: ", err)
+		panic(err)
+	}
 	writeSyncer := getLogWriter(
 		global.LoggerSetting.Filename,
 		global.LoggerSetting.MaxAge,

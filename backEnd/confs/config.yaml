@@ -1,0 +1,30 @@
+server:
+  name: webconsole
+  version: v1.0.0
+  host: 59.49.106.69:8090
+  port: 9426
+  mode: dev
+  start_time: 2021-09-15
+  machine_id: 1
+  locale: zh
+
+log:
+  level: debug
+  filename: web_app.log
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
+database:
+  host: 127.0.0.1:3306
+  user: root
+  password: 123456
+  dbname: edu
+  max_open_conns: 20
+  max_idel_conns: 20
+
+rbac:
+  defaultroleFile: confs/roles.json
+  defaultinherFile: confs/inher.json
+  customerroleFile: confs/customerRoles.json
+  customerinherFile: confs/customerInher.json
