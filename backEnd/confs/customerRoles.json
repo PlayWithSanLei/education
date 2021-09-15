@@ -1,0 +1,1 @@
+{"manager":["add-table","del-table","query-datas","service-record"],"root":["application","check-role","check-user","default-role","del-user","edit-role","edit-user","manage-iserver","query-user"],"user":["bridge-record","portal-record","query-data","road-record","toll-record","tunnel-record"]}
