@@ -52,3 +52,28 @@ func UpdateRBAC(c *gin.Context) {
 	resp.ResponseSuccess(c, nil)
 
 }
+
+func GetRBAC(c *gin.Context) {
+	r, err := service.GetRBAC()
+	if err != nil {
+		if err == inErr.ErrRBACNotFound {
+			zap.L().Error("未找到用户自定义权限文件", zap.Error(err))
+			resp.ResponseError(c, resp.CodeServerBusy)
+			return
+
+		}
+		zap.L().Error("未知错误", zap.Error(err))
+		resp.ResponseError(c, resp.CodeServerBusy)
+		return
+	}
+	resp.ResponseSuccess(c, r)
+}
+
+func QueryRBAC(c *gin.Context) {
+	roles, err := service.QueryRBAC(c.Param("id"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	resp.ResponseSuccess(c, roles)
+}
