@@ -71,11 +71,13 @@ export default {
     },
     async submitForm() {
       const {data:res} = await this.$axios.post('/login', this.ruleForm)
+      console.log(res)
       if (res.code === 1000) {
         let token = 'Bearer '  + res.msg.token
         window.localStorage.setItem('token', token)
         window.localStorage.setItem('name', res.msg.name)
         window.localStorage.setItem('role', res.msg.role)
+        window.localStorage.setItem('unit', res.msg.unit)
         this.$message.success('登录成功')
         this.$router.replace('/home')
       } else {
