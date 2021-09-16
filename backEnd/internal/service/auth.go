@@ -52,7 +52,7 @@ func Login(p *model.ParamLogin) (string, string, string, string, error) {
 	}
 
 	// 验证通过后发放token
-	aToken, err := jwt.GenToken(user.UserID, user.Username, user.Role)
+	aToken, err := jwt.GenToken(user.UserID, user.Username, user.Role, user.Unit)
 	return fmt.Sprintf("%d", user.UserID), user.Username, user.Role, aToken, err
 
 }
