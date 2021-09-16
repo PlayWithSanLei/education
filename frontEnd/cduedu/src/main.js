@@ -4,5 +4,8 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import './assets/CSS/style.css'
+import axios from "./axios/config"
 
-createApp(App).use(router).use(ElementPlus).mount('#app')
+const app = createApp(App)
+app.config.globalProperties.$axios = axios
+app.use(router).use(ElementPlus).mount('#app')

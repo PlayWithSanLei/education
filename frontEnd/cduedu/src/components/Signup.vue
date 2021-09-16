@@ -49,7 +49,7 @@
           <el-input type="text" v-model="ruleForm.answer" autocomplete="off"></el-input>
         </el-form-item>
         <br/>
-        <el-button class="button" type="primary" @click="submitForm()">提交</el-button>
+        <el-button class="button" type="primary" @click="submitForm()">注册</el-button>
         <el-button class="button" @click="resetForm('ruleForm')">重置</el-button>
       </el-form>
     </el-card>
@@ -57,10 +57,12 @@
 </template>
 
 <script>
+import {isEmail} from "@/assets/JS/validateEmail";
+// import axios from "axios";
 export default {
   name: "Signup",
   data() {
-    var validatePass = (rule, value, callback) => {
+    let validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
@@ -69,8 +71,8 @@ export default {
         }
         callback()
       }
-    }
-    var validatePass2 = (rule, value, callback) => {
+    };
+    let validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.password) {
@@ -78,11 +80,32 @@ export default {
       } else {
         callback()
       }
+    };
+    let validateEmail = (rule, value, callback) => {
+      if(!isEmail(value)) {
+        callback(new Error('邮箱格式错误！'))
+      } else {
+        callback()
+      }
+    }
+
+    let validateMobile = (rule, value, callback) => {
+      if(!(/^[1]{1}[0-9]{10}$/.test(value))) {
+        callback(new Error('请输入正确的11位手机号码！'))
+      }
+      else {
+        callback()
+      }
     }
     return {
       rules: {
-        password: [{validator: validatePass, trigger: 'blur'}],
-        repassword: [{validator: validatePass2, trigger: 'blur'}],
+        password: [{required: true,  validator: validatePass, trigger: 'blur'}],
+        repassword: [{required: true, validator: validatePass2, trigger: 'blur'}],
+        username: [{required: true, message: '请输入姓名', trigger: 'blur'}],
+        question: [{required: true, message: '请选择密保问题', trigger: 'blur'}],
+        answer: [{required: true, message: '请输入密保答案', trigger: 'blur'}],
+        email: [{required: true, message: '请输入邮箱', trigger: 'blur'},{validator: validateEmail, trigger: 'blur'}],
+        mobile: [{required: true, message: '请输入手机号', trigger: 'blur'}, {validator: validateMobile, trigger: 'blur'}]
       },
       ruleForm: {
         username: '',
@@ -93,15 +116,20 @@ export default {
         question: '',
         answer: ''
       },
-      options: ['你的父亲名字','你的母亲名字','你的宠物名字','你的大学名字','你的名字']
+      options: ['你的父亲名字', '你的母亲名字', '你的宠物名字', '你的大学名字', '你的名字']
     }
   },
   methods: {
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    submitForm() {
-      console.log(JSON.parse(JSON.stringify(this.ruleForm)))
+    async submitForm() {
+      const {data:res} = await this.$axios.post('/signup', this.ruleForm)
+      // console.log(res)
+      if (res.code === 1000) {
+        this.$router.replace('/login')
+        this.$message.success('注册成功')
+      }
     }
   }
 }
@@ -124,17 +152,21 @@ export default {
   border: 30px solid rgba(255, 255, 255, 0.4);
   background-clip: padding-box;
 }
+
 .question {
-  width: 29.8em;
+  width: 100%;
 }
+
 .linkTop {
   width: 100%;
   height: 1px;
-  border-top:solid #bbbbbb 1px;
+  border-top: solid #bbbbbb 1px;
 }
+
 .demo-ruleForm {
   padding-right: 2.7em;
 }
+
 .button {
   float: right;
   margin-left: 1em;
