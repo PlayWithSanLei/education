@@ -9,6 +9,7 @@
       </el-col>
 
       <el-col :span="12" class="nav-container">
+        <span class="title">教育局民办教育信息服务与监管平台</span>
       </el-col>
       <el-col :span="4" class="user-container" v-if="haveNoToken()">
         <a class="user-button" @click="toLogin">登录</a>
@@ -19,7 +20,6 @@
           <div class="user-avatar" @click="toggleUserPanel">
             <el-collapse-transition>
               <div class="user-panel" v-show="showUserPanel">
-                <!--这里可用v-for配合@click使用-->
                 <div class="user-function" style="color: #409EFF; font-weight: bold; font-size: 16px">个人信息</div>
                 <div class="user-function">用户名：{{ userName }}</div>
                 <div class="user-function">用户单位：{{ unit }}</div>
@@ -105,6 +105,8 @@ export default {
 .nav-container {
   display: flex;
   /*height: 3rem;*/
+  align-items: center;
+  justify-content: center;
 }
 
 .user-container {
@@ -208,5 +210,11 @@ a {
 
 a:hover {
   color: #00fff9;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+
 }
 </style>
