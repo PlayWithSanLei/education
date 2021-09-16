@@ -37,8 +37,8 @@ func SignUp(p *model.ParamSignUp) error {
 
 }
 
-// 处理用户登录以及JWT的发放 id name role token
-func Login(p *model.ParamLogin) (string, string, string, string, error) {
+// 处理用户登录以及JWT的发放 id name role unit token
+func Login(p *model.ParamLogin) (string, string, string, string, string, error) {
 	// 构造一个User实例
 	user := &model.User{
 		Mobile:   p.Mobile,
@@ -48,11 +48,11 @@ func Login(p *model.ParamLogin) (string, string, string, string, error) {
 	// 数据库验证
 	if err := db.UserLogin(user); err != nil {
 		log.Println(user)
-		return "", "", "", "", nil
+		return "", "", "", "", "", nil
 	}
 
 	// 验证通过后发放token
-	aToken, err := jwt.GenToken(user.UserID, user.Username, user.Role)
-	return fmt.Sprintf("%d", user.UserID), user.Username, user.Role, aToken, err
+	aToken, err := jwt.GenToken(user.UserID, user.Username, user.Role, user.Unit)
+	return fmt.Sprintf("%d", user.UserID), user.Username, user.Role, user.Unit, aToken, err
 
 }
