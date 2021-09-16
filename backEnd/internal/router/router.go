@@ -28,7 +28,10 @@ func NewRouter() (r *gin.Engine, err error) {
 	// 用户管理路由
 	homeGroup := apiv1.Group("/home")
 	{
-		homeGroup.Use()
+		//homeGroup.Use(middleware.JWTAuthMiddleware())
+
+		homeGroup.POST("/roles", v1.UpdateRBAC)
+
 	}
 
 	return r, nil

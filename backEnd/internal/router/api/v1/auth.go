@@ -60,7 +60,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	// 2. 业务处理
-	userID, userName, userRole, aToken, err := service.Login(p)
+	userID, userName, userRole, userUnit, aToken, err := service.Login(p)
 	if err != nil {
 		zap.L().Error("登录失败", zap.Error(err))
 		if errors.Is(err, inErr.ErrUserNotExist) {
@@ -76,6 +76,7 @@ func LoginHandler(c *gin.Context) {
 	data := map[string]string{
 		"token": aToken,
 		"role":  userRole,
+		"unit":  userUnit,
 		"id":    userID,
 		"name":  userName,
 	}
