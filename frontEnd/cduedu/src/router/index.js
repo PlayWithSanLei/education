@@ -2,6 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 const Signup = () => import('../components/Signup')
 const Login = () => import('../components/Login')
 const Home = () => import('../components/Home')
+const User = () => import('../components/User')
+const Org = () => import('../components/Org')
+const Acc = () => import('../components/Acc')
+const Map = () => import('../components/Map')
 
 const routes = [
   {
@@ -21,7 +25,31 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    redirect: '/user',
+    component: Home,
+    children: [
+      {
+        path: '/user',
+        name: 'User',
+        component: User
+      },
+      {
+        path: '/org',
+        name: 'Org',
+        component: Org
+      },
+      {
+        path: '/acc',
+        name: 'Acc',
+        component: Acc
+      },
+      {
+        path: '/map',
+        name: 'Map',
+        component: Map
+      }
+    ]
+
   }
 ]
 
