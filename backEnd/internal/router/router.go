@@ -31,6 +31,12 @@ func NewRouter() (r *gin.Engine, err error) {
 		//homeGroup.Use(middleware.JWTAuthMiddleware())
 
 		homeGroup.POST("/roles", v1.UpdateRBAC)
+		homeGroup.GET("/roles", v1.GetRBAC)
+		homeGroup.GET("/roles/:id", v1.QueryRBAC)
+
+		homeGroup.GET("/users", v1.GetUsersHandler)
+		homeGroup.POST("/users")
+		homeGroup.DELETE("/users")
 
 	}
 

@@ -120,6 +120,7 @@
       </span>
         </template>
       </el-dialog>
+      <el-table></el-table>
     </el-card>
   </div>
 
