@@ -1,21 +1,5 @@
-{
-  "root":[ "check-user",
-    "query-user",
-    "del-user",
-    "edit-user",
-    "edit-role",
-    "check-role",
-    "default-role",
-    "application",
-    "manage-iserver"],
-    "manager":["add-table",
-      "del-table",
-      "query-datas",
-      "service-record"],
-      "user":["query-data",
-        "road-record",
-        "bridge-record",
-        "tunnel-record",
-        "portal-record",
-        "toll-record"]
-}
+{"root":["修改组织","查询组织","获取组织"],
+ "交通部":["制定交规"],
+ "人事":["人事任免"],
+ "外务":["服侍洋大人"],
+ "教育部":["添加办公室"]}

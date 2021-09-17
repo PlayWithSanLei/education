@@ -33,7 +33,7 @@ func NoUser() error {
 func GetUsers() (users []model.UserResp, err error) {
 	statement := eorm.NewStatement()
 	statement = statement.SetTableName("user").
-		Select("userid, username, role, unit")
+		Select("userid, username,mobile, email, role, unit, status")
 
 	c := <-global.DBClients
 	defer func() {
@@ -79,29 +79,28 @@ func QueryUsers(column string, v interface{}) (users []model.UserResp, err error
 
 }
 
-func UserPassword(id int64) (string, error) {
-	tmp := new(model.User)
+func UserData(id int64, user *model.User) error {
 	statement1 := eorm.NewStatement()
 	statement1 = statement1.SetTableName("user").
 		AndEqual("userid", id).
-		Select("userid, username, password, role, unit")
+		Select("*")
 
 	c := <-global.DBClients
 	defer func() {
 		global.DBClients <- c
 	}()
 
-	err := c.FindOne(context.Background(), statement1, tmp)
+	err := c.FindOne(context.Background(), statement1, user)
 	// 查询没有结果
 	if err == sql.ErrNoRows {
-		return "", inErr.ErrUserNotExist
+		return inErr.ErrUserNotExist
 	}
 
 	// 查询失败
 	if err != nil {
-		return "", err
+		return err
 	}
-	return tmp.Password, nil
+	return nil
 
 }
 
@@ -123,7 +122,7 @@ func UpdateUsers(users *model.User) (err error) {
 
 }
 
-func DeleteUsersHandler(users *model.User) (err error) {
+func DeleteUsers(users *model.User) (err error) {
 	statement := eorm.NewStatement()
 	statement = statement.SetTableName("user").
 		AndEqual("userid", users.UserID)
@@ -134,6 +133,24 @@ func DeleteUsersHandler(users *model.User) (err error) {
 	}()
 
 	_, err = c.Delete(context.Background(), statement)
+	if err != nil {
+		return
+	}
+	return
+
+}
+
+func BlockUsers(users *model.User) (err error) {
+	statement := eorm.NewStatement()
+	statement = statement.SetTableName("user").
+		AndEqual("userid", users.UserID).UpdateStruct(users)
+
+	c := <-global.DBClients
+	defer func() {
+		global.DBClients <- c
+	}()
+
+	_, err = c.Update(context.Background(), statement)
 	if err != nil {
 		return
 	}

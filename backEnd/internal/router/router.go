@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/impact-eintr/education/docs"
 	"github.com/impact-eintr/education/internal/middleware"
 	v1 "github.com/impact-eintr/education/internal/router/api/v1"
 	"github.com/impact-eintr/education/pkg/logger"
@@ -25,19 +26,28 @@ func NewRouter() (r *gin.Engine, err error) {
 	apiv1.POST("/signup", v1.SignUpHandler)
 	apiv1.POST("/login", v1.LoginHandler)
 
-	// 用户管理路由
+	// 用户家目录路由
 	homeGroup := apiv1.Group("/home")
 	{
-		//homeGroup.Use(middleware.JWTAuthMiddleware())
+		homeGroup.Use(middleware.JWTAuthMiddleware())
 
-		homeGroup.POST("/roles", v1.UpdateRBAC)
-		homeGroup.GET("/roles", v1.GetRBAC)
-		homeGroup.GET("/roles/:id", v1.QueryRBAC)
+		// 这里以角色代表组织
+		homeGroup.POST("/org", middleware.RBACMiddleware("修改组织"), v1.UpdateRBAC)
+		homeGroup.GET("/org", middleware.RBACMiddleware("获取组织"), v1.GetRBAC)
+		homeGroup.GET("/org/:id", middleware.RBACMiddleware("查询组织"), v1.QueryRBAC)
 
+		// 用户管理路由
 		homeGroup.GET("/users", v1.GetUsersHandler)
-		homeGroup.POST("/users")
-		homeGroup.DELETE("/users")
+		homeGroup.POST("/users", v1.UpdateUsersHandler)
+		homeGroup.HEAD("/users/:id", v1.BlockUserHandler)
+		homeGroup.DELETE("/users/:id", v1.DeleteUsersHandler)
+	}
 
+	// 栏目管理路由
+	columnGroup := apiv1.Group("/column")
+	{
+		columnGroup.Use(middleware.JWTAuthMiddleware())
+		columnGroup.POST("/article")
 	}
 
 	return r, nil

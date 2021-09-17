@@ -18,6 +18,10 @@ type ParamLogin struct {
 type UserReq struct {
 	UserID   string `json:"userid" binding:"required"`
 	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Mobile   string `json:"mobile" binding:"required"`
+	Question string `json:"question" binding:"required"`
+	Answer   string `json:"answer" binding:"required"`
 	Role     string `json:"role" binding:"required"`
 	Unit     string `json:"unit" binding:"required"`
 }

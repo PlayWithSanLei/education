@@ -3,6 +3,7 @@ module github.com/impact-eintr/education
 go 1.17
 
 require (
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-playground/locales v0.13.0
@@ -11,10 +12,12 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/impact-eintr/WebKits v1.0.1
+	github.com/impact-eintr/ecache v1.0.0
 	github.com/impact-eintr/eorm v0.0.4
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/spf13/viper v1.8.1
 	github.com/swaggo/gin-swagger v1.3.1
+	github.com/swaggo/swag v1.5.1
 	go.uber.org/zap v1.19.1
 )
 
@@ -45,7 +48,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	github.com/swaggo/swag v1.5.1 // indirect
 	github.com/ugorji/go/codec v1.1.13 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect

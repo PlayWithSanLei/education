@@ -8,7 +8,7 @@ import (
 	"github.com/impact-eintr/education/pkg/resp"
 )
 
-// JWT认证中间件
+// JWT认证中间件 检查缓存中的权限信息
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 客户端携带Token有三种方式 1.放在请求头 2.放在请求体 3.放在URI

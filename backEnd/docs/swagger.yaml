@@ -1,0 +1,167 @@
+definitions:
+  model.UserReq:
+    properties:
+      answer:
+        type: string
+      email:
+        type: string
+      mobile:
+        type: string
+      question:
+        type: string
+      role:
+        type: string
+      unit:
+        type: string
+      userid:
+        type: string
+      username:
+        type: string
+    required:
+    - answer
+    - email
+    - mobile
+    - question
+    - role
+    - unit
+    - userid
+    - username
+    type: object
+  resp.Resp:
+    properties:
+      code:
+        type: integer
+      msg:
+        type: object
+    type: object
+info:
+  contact: {}
+  description: 华迪的作业
+  title: EDU后台管理系统
+  version: 1.0.0
+paths:
+  /api/v1/home/users:
+    get:
+      consumes:
+      - application/json
+      description: 请求后可以获取用户数据
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户数据接口
+      tags:
+      - 用户相关api
+    post:
+      consumes:
+      - application/json
+      description: 请求后可以将post请求body中提供的用户新数据替换原来的用户数据
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: 用户信息
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新用户数据接口
+      tags:
+      - 用户相关api
+  /api/v1/home/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 请求后可以删除用户数据
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除用户数据接口
+      tags:
+      - 用户相关api
+    head:
+      consumes:
+      - application/json
+      description: 请求后可以封禁用户
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 封禁用户接口
+      tags:
+      - 用户相关api
+swagger: "2.0"
