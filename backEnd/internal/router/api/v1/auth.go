@@ -14,6 +14,16 @@ import (
 	"go.uber.org/zap"
 )
 
+// SignUpHandler 注册接口
+// @Summary 处理注册请求
+// @Description 首页注册
+// @Tags 注册api
+// @Accept application/json
+// @Produce application/json
+// @Param 注册信息 body model.ParamSignUp true "用户注册信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} resp.Resp{code=int,msg=string}
+// @Router /api/v1/signup [post]
 func SignUpHandler(c *gin.Context) {
 	var err error
 	// 获取参数 参数校验
@@ -44,6 +54,16 @@ func SignUpHandler(c *gin.Context) {
 
 }
 
+// LoginHandler 登录接口
+// @Summary 处理登录请求
+// @Description 首页登录
+// @Tags 登陆api
+// @Accept application/json
+// @Produce application/json
+// @Param 登录信息 body model.ParamLogin true "用户登录信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} resp.Resp{code=int,msg=string}
+// @Router /api/v1/login [post]
 func LoginHandler(c *gin.Context) {
 	// 获得请求参数以及参数校验
 	p := new(model.ParamLogin)

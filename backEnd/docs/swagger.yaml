@@ -1,5 +1,34 @@
 definitions:
-  model.UserReq:
+  model.ParamLogin:
+    properties:
+      mobile:
+        type: string
+      password:
+        type: string
+    required:
+    - mobile
+    - password
+    type: object
+  model.ParamReset:
+    properties:
+      answer:
+        type: string
+      mobile:
+        type: string
+      password:
+        type: string
+      question:
+        type: string
+      repassword:
+        type: string
+    required:
+    - answer
+    - mobile
+    - password
+    - question
+    - repassword
+    type: object
+  model.ParamSignUp:
     properties:
       answer:
         type: string
@@ -7,7 +36,28 @@ definitions:
         type: string
       mobile:
         type: string
+      password:
+        type: string
       question:
+        type: string
+      repassword:
+        type: string
+      username:
+        type: string
+    required:
+    - answer
+    - email
+    - mobile
+    - password
+    - question
+    - repassword
+    - username
+    type: object
+  model.UserReq:
+    properties:
+      email:
+        type: string
+      mobile:
         type: string
       role:
         type: string
@@ -18,10 +68,8 @@ definitions:
       username:
         type: string
     required:
-    - answer
     - email
     - mobile
-    - question
     - role
     - unit
     - userid
@@ -40,6 +88,42 @@ info:
   title: EDU后台管理系统
   version: 1.0.0
 paths:
+  /api/v1/home/password/{id}:
+    post:
+      consumes:
+      - application/json
+      description: 请求后可以将post请求body中提供的用户新密码替换原来的用户密码
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: 用户信息
+        required: true
+        schema:
+          $ref: '#/definitions/model.ParamReset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新用户密码接口
+      tags:
+      - 用户相关api
   /api/v1/home/users:
     get:
       consumes:
@@ -164,4 +248,102 @@ paths:
       summary: 封禁用户接口
       tags:
       - 用户相关api
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: 首页登录
+      parameters:
+      - description: 用户登录信息
+        in: body
+        name: 登录信息
+        required: true
+        schema:
+          $ref: '#/definitions/model.ParamLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 处理登录请求
+      tags:
+      - 登陆api
+  /api/v1/password:
+    post:
+      consumes:
+      - application/json
+      description: 请求后可用于忘记密码后的重置
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户信息
+        in: body
+        name: 用户信息
+        required: true
+        schema:
+          $ref: '#/definitions/model.ParamReset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新用户密码接口
+      tags:
+      - 用户相关api
+  /api/v1/signup:
+    post:
+      consumes:
+      - application/json
+      description: 首页注册
+      parameters:
+      - description: 用户注册信息
+        in: body
+        name: 注册信息
+        required: true
+        schema:
+          $ref: '#/definitions/model.ParamSignUp'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Resp'
+            - properties:
+                code:
+                  type: integer
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 处理注册请求
+      tags:
+      - 注册api
 swagger: "2.0"

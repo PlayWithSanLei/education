@@ -20,8 +20,14 @@ type UserReq struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required"`
 	Mobile   string `json:"mobile" binding:"required"`
-	Question string `json:"question" binding:"required"`
-	Answer   string `json:"answer" binding:"required"`
 	Role     string `json:"role" binding:"required"`
 	Unit     string `json:"unit" binding:"required"`
+}
+
+type ParamReset struct {
+	Mobile     string `eorm:"mobile" json:"mobile" binding:"required"`
+	Password   string `eorm:"password" json:"password" binding:"required"`
+	RePassword string `eorm:"repassword" json:"repassword" binding:"required,eqfield=Password"`
+	Question   string `eorm:"question" json:"question" binding:"required"`
+	Answer     string `eorm:"answer" json:"answer" binding:"required"`
 }

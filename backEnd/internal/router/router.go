@@ -25,6 +25,7 @@ func NewRouter() (r *gin.Engine, err error) {
 	apiv1 := r.Group("/api/v1")
 	apiv1.POST("/signup", v1.SignUpHandler)
 	apiv1.POST("/login", v1.LoginHandler)
+	apiv1.POST("/password", v1.ForgetPasswordHandler)
 
 	// 用户家目录路由
 	homeGroup := apiv1.Group("/home")
@@ -40,6 +41,7 @@ func NewRouter() (r *gin.Engine, err error) {
 		homeGroup.GET("/users", v1.GetUsersHandler)
 		homeGroup.POST("/users", v1.UpdateUsersHandler)
 		homeGroup.HEAD("/users/:id", v1.BlockUserHandler)
+		homeGroup.POST("/password/:id", middleware.RBACMiddleware("修改密码"), v1.ResetPasswordHandler)
 		homeGroup.DELETE("/users/:id", v1.DeleteUsersHandler)
 	}
 

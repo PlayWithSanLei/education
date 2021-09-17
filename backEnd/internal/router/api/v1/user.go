@@ -136,3 +136,80 @@ func BlockUserHandler(c *gin.Context) {
 	resp.ResponseSuccess(c, nil)
 
 }
+
+// ResetPasswordHandler 更新用户密码接口
+// @Summary 更新用户密码接口
+// @Description 请求后可以将post请求body中提供的用户新密码替换原来的用户密码
+// @Tags 用户相关api
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param 用户信息 body model.ParamReset true "用户信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} resp.Resp{code=int,msg=string}
+// @Router /api/v1/home/password/{id} [post]
+func ResetPasswordHandler(c *gin.Context) {
+	var err error
+	pr := new(model.ParamReset)
+	if err := c.ShouldBindJSON(pr); err != nil {
+		zap.L().Error("update user with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			resp.ResponseError(c, resp.CodeInvalidParam)
+			return
+		}
+		resp.ResponseErrorWithMsg(c, resp.CodeInvalidParam, errs.Translate(global.Trans))
+		return
+	}
+
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		zap.L().Error("解析错误", zap.Error(err))
+		resp.ResponseError(c, resp.CodeInvalidPath)
+		return
+	}
+
+	err = service.ResetPassword(pr, id)
+	if err != nil {
+		zap.L().Error("未知错误", zap.Error(err))
+		resp.ResponseError(c, resp.CodeServerBusy)
+		return
+	}
+	resp.ResponseSuccess(c, nil)
+
+}
+
+// ForgetPasswordHandler 更新用户密码接口
+// @Summary 更新用户密码接口
+// @Description 请求后可用于忘记密码后的重置
+// @Tags 用户相关api
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param 用户信息 body model.ParamReset true "用户信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} resp.Resp{code=int,msg=string}
+// @Router /api/v1/password [post]
+func ForgetPasswordHandler(c *gin.Context) {
+	var err error
+	pr := new(model.ParamReset)
+	if err := c.ShouldBindJSON(pr); err != nil {
+		zap.L().Error("update user with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			resp.ResponseError(c, resp.CodeInvalidParam)
+			return
+		}
+		resp.ResponseErrorWithMsg(c, resp.CodeInvalidParam, errs.Translate(global.Trans))
+		return
+	}
+
+	err = service.ForgetPassword(pr, pr.Mobile)
+	if err != nil {
+		zap.L().Error("未知错误", zap.Error(err))
+		resp.ResponseError(c, resp.CodeServerBusy)
+		return
+	}
+	resp.ResponseSuccess(c, nil)
+
+}

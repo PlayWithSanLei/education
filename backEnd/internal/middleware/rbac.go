@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/impact-eintr/education/global"
 	"github.com/impact-eintr/education/internal/dao/cache"
+	"github.com/impact-eintr/education/internal/dao/db"
+	"github.com/impact-eintr/education/internal/model"
 	"github.com/impact-eintr/education/pkg/resp"
 )
 
@@ -15,11 +17,13 @@ func RBACMiddleware(p string) gin.HandlerFunc {
 		oldRole := c.GetString("userRole")
 		bRole := cache.CacheCheck(fmt.Sprintf("%d", c.GetInt64("userID")))
 		if len(bRole) == 0 {
-			// TODO 如果缓存中没有当前用户数据(缓存失败 缓存失效) 尝试获取新的数据
-
+			user := new(model.User)
+			db.UserData(c.GetInt64("userID"), user)
+			if user.UserID != 0 {
+				cache.CacheUpdate(fmt.Sprintf("%d", user.UserID), user.Role)
+			}
 		}
 		curRole := string(bRole)
-		log.Println(curRole, oldRole, c.GetInt64("userID"))
 		// 先检测当前用户的角色是否已经发生改变
 		if oldRole != curRole {
 			resp.ResponseError(c, resp.CodeUserPermissionChanged)
@@ -29,6 +33,7 @@ func RBACMiddleware(p string) gin.HandlerFunc {
 		if global.Auth.RBAC.IsGranted(oldRole, global.Auth.Permissions[p], nil) {
 			c.Next()
 		} else {
+			log.Println(oldRole, global.Auth.Permissions)
 			resp.ResponseError(c, resp.CodeUserPermissionDenied)
 			c.Abort()
 		}

@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/impact-eintr/education/internal/dao/cache"
 	"github.com/impact-eintr/education/internal/dao/db"
+	"github.com/impact-eintr/education/internal/inErr"
 	"github.com/impact-eintr/education/internal/model"
 )
 
@@ -15,8 +16,6 @@ func UpdateUser(reqUser *model.UserReq, id int64) (err error) {
 	// 替换信息 除了状态和密码
 	user.UserID = id
 	user.Username = reqUser.Username
-	user.Question = reqUser.Question
-	user.Answer = reqUser.Answer
 	user.Unit = reqUser.Unit
 
 	if user.Role != reqUser.Role {
@@ -68,6 +67,46 @@ func BlockUser(id int64) (err error) {
 		user.Status = 0
 	}
 
+	err = db.UpdateUsers(user)
+	if err != nil {
+		return
+	}
+	return nil
+
+}
+
+func ResetPassword(paramReset *model.ParamReset, id int64) (err error) {
+	user := new(model.User)
+	err = db.UserData(id, user)
+	if err != nil {
+		return
+	}
+
+	if user.Question != paramReset.Question || user.Answer != paramReset.Answer {
+		return inErr.ErrVerify
+	}
+
+	user.Password = paramReset.Password
+	err = db.UpdateUsers(user)
+	if err != nil {
+		return
+	}
+	return nil
+
+}
+
+func ForgetPassword(paramReset *model.ParamReset, mobile string) (err error) {
+	user := new(model.User)
+	err = db.UserDataByMobile(mobile, user)
+	if err != nil {
+		return
+	}
+
+	if user.Question != paramReset.Question || user.Answer != paramReset.Answer {
+		return inErr.ErrVerify
+	}
+
+	user.Password = paramReset.Password
 	err = db.UpdateUsers(user)
 	if err != nil {
 		return

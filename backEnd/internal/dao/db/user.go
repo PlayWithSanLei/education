@@ -33,7 +33,7 @@ func NoUser() error {
 func GetUsers() (users []model.UserResp, err error) {
 	statement := eorm.NewStatement()
 	statement = statement.SetTableName("user").
-		Select("userid, username,mobile, email, role, unit, status")
+		Select("userid, username, mobile, email, role, unit, status")
 
 	c := <-global.DBClients
 	defer func() {
@@ -76,6 +76,31 @@ func QueryUsers(column string, v interface{}) (users []model.UserResp, err error
 		return
 	}
 	return
+
+}
+
+func UserDataByMobile(m string, user *model.User) error {
+	statement1 := eorm.NewStatement()
+	statement1 = statement1.SetTableName("user").
+		AndEqual("mobile", m).
+		Select("*")
+
+	c := <-global.DBClients
+	defer func() {
+		global.DBClients <- c
+	}()
+
+	err := c.FindOne(context.Background(), statement1, user)
+	// 查询没有结果
+	if err == sql.ErrNoRows {
+		return inErr.ErrUserNotExist
+	}
+
+	// 查询失败
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
 

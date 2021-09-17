@@ -12,6 +12,17 @@ import (
 	"go.uber.org/zap"
 )
 
+// UpdateRBAC 更新RBAC模型接口
+// @Summary 更新RBAC模型接口
+// @Description 请求后可以将post请求body中提供的RBAC新模型替换原来的RBAC模型
+// @Tags 用户相关api
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param 用户信息 body model.UserReq true "用户信息"
+// @Security ApiKeyAuth
+// @Success 200 {object} resp.Resp{code=int,msg=string}
+// @Router /api/v1/home/users [post]
 func UpdateRBAC(c *gin.Context) {
 	jsons := make([]map[string][]string, 2, 2) //注意该结构接受的内容
 	if err := c.BindJSON(&jsons); err != nil {
@@ -29,7 +40,6 @@ func UpdateRBAC(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Println(jsons)
 
 	if err := service.UpdateRBAC(jsons[0], jsons[1]); err != nil {
 		if err == inErr.ErrInvalidInher {
@@ -53,6 +63,16 @@ func UpdateRBAC(c *gin.Context) {
 
 }
 
+// GetRBAC 获取RBAC数据接口
+// @Summary 获取RBAC数据接口
+// @Description 请求后可以获取RBAC数据
+// @Tags 用户相关api
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Security ApiKeyAuth
+// @Success 200 {object} resp.Resp{code=int,msg=string}
+// @Router /api/v1/home/users [get]
 func GetRBAC(c *gin.Context) {
 	r, err := service.GetRBAC()
 	if err != nil {

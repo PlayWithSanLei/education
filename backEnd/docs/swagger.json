@@ -7,6 +7,67 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/v1/home/password/{id}": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "请求后可以将post请求body中提供的用户新密码替换原来的用户密码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户相关api"
+                ],
+                "summary": "更新用户密码接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "用户信息",
+                        "name": "用户信息",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ParamReset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/resp.Resp"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/home/users": {
             "get": {
                 "security": [
@@ -219,19 +280,229 @@
                     }
                 }
             }
+        },
+        "/api/v1/login": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "首页登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "登陆api"
+                ],
+                "summary": "处理登录请求",
+                "parameters": [
+                    {
+                        "description": "用户登录信息",
+                        "name": "登录信息",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ParamLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/resp.Resp"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/password": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "请求后可用于忘记密码后的重置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户相关api"
+                ],
+                "summary": "更新用户密码接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "用户信息",
+                        "name": "用户信息",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ParamReset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/resp.Resp"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/signup": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "首页注册",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "注册api"
+                ],
+                "summary": "处理注册请求",
+                "parameters": [
+                    {
+                        "description": "用户注册信息",
+                        "name": "注册信息",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ParamSignUp"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/resp.Resp"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "model.UserReq": {
+        "model.ParamLogin": {
+            "type": "object",
+            "required": [
+                "mobile",
+                "password"
+            ],
+            "properties": {
+                "mobile": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ParamReset": {
+            "type": "object",
+            "required": [
+                "answer",
+                "mobile",
+                "password",
+                "question",
+                "repassword"
+            ],
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "repassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ParamSignUp": {
             "type": "object",
             "required": [
                 "answer",
                 "email",
                 "mobile",
+                "password",
                 "question",
-                "role",
-                "unit",
-                "userid",
+                "repassword",
                 "username"
             ],
             "properties": {
@@ -244,7 +515,35 @@
                 "mobile": {
                     "type": "string"
                 },
+                "password": {
+                    "type": "string"
+                },
                 "question": {
+                    "type": "string"
+                },
+                "repassword": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UserReq": {
+            "type": "object",
+            "required": [
+                "email",
+                "mobile",
+                "role",
+                "unit",
+                "userid",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "mobile": {
                     "type": "string"
                 },
                 "role": {
