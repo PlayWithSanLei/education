@@ -13,12 +13,12 @@ import (
 func RBACMiddleware(p string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		oldRole := c.GetString("userRole")
-		p := cache.CacheCheck(fmt.Sprintf("%d", c.GetInt64("userID")))
-		if len(p) == 0 {
+		bRole := cache.CacheCheck(fmt.Sprintf("%d", c.GetInt64("userID")))
+		if len(bRole) == 0 {
 			// TODO 如果缓存中没有当前用户数据(缓存失败 缓存失效) 尝试获取新的数据
 
 		}
-		curRole := string(p)
+		curRole := string(bRole)
 		log.Println(curRole, oldRole, c.GetInt64("userID"))
 		// 先检测当前用户的角色是否已经发生改变
 		if oldRole != curRole {
